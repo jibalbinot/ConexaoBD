@@ -1,5 +1,7 @@
 package view;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import model.Usuario;
 import model.UsuarioDAO;
@@ -8,15 +10,23 @@ public class Principal {
 
 	public static void main(String[] args) {
 		//Controller
-				
-		// ler os dados do usuário de uma tela/interface/console
-		Usuario u = tela();
-
+		
 		//Responsável pelo CRUD
 		UsuarioDAO ud = new UsuarioDAO();
 		
+		//Consulta todos os usuarios cadastrados no BD
+		List<Usuario> lista = ud.consultaTodos();
+		
+		//mostra na tela o resultado
+		for(int i=0;i<lista.size();i++) {
+			lista.get(i).mostraUsuario();
+		}
+		
+		// ler os dados do usuário de uma tela/interface/console
+		//Usuario u = tela();
+
 		// Gravar esses dados no banco de dados
-		ud.insere(u);
+		//ud.insere(u);
 	}
 
 	public static Usuario tela() {

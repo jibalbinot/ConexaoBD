@@ -3,7 +3,7 @@ package model;
 /**
  * 
  * @author neli
- *  JavaBean para representar a tabela Usuario
+ *  JavaBean para representar a tabela Usuario que está no Bando de Dados
  *  JavaBean é uma classe com um construtor sem argumentos, com os atributos privados e com getteres e setters para todos os atributos
  *  
  */
@@ -44,7 +44,8 @@ public class Usuario {
 		System.out.println("Id....: "+this.getIdUsuario());
 		System.out.println("Nome..: "+this.getNomeUsuario());
 		System.out.println("E-mail: "+this.getEmailUsuario());
-		System.out.println("Senha.: "+this.getSenhaUsuario());	
+		System.out.println("Senha.: "+this.getSenhaUsuario());
+		System.out.println();
 	}
 	
 }
