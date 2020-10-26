@@ -54,7 +54,7 @@ public class UsuarioDAO {
 			ps.execute();
 
 			// Fecha a conexão a cada operação
-			this.c.close();
+			// this.c.close();
 
 		} catch (SQLException e) {
 			System.out.println("Erro ao inserir Usuario: " + e);
@@ -65,12 +65,53 @@ public class UsuarioDAO {
 	 * R - Read - Método responsável por consultar um objeto Usuario no Banco de
 	 * dados
 	 */
-	public void consulta(Usuario u) {
+	public Usuario consulta(Usuario u) {
+		try {
+
+			// Se não tiver uma conexão ela será criada
+			if (this.c == null) {
+				this.c = new ConnectionFactory().getConnection();
+			}
+
+			// clausula SQL
+			// select * from usuario where emailusuario='jibalbinot@gmail.com' and
+			// senhausuario='admin';
+			String sql = "SELECT * FROM Usuario WHERE emailUsuario=? AND senhaUsuario=?";
+
+			// Carregamento do sql para o PS
+			PreparedStatement ps = c.prepareStatement(sql);
+
+			ps.setString(1, u.getEmailUsuario());
+			ps.setString(2, u.getSenhaUsuario());
+
+			// Executa o comando que consulta todos os registros de usuarios do BD e
+			// armazena no rs
+			ResultSet rs = ps.executeQuery();
+
+			Usuario aux = null;
+			// percorre o RS para ver se retornou um registro da consulta
+			while (rs.next()) {
+				aux = new Usuario();
+				aux.setIdUsuario(rs.getInt("IdUsuario"));
+				aux.setNomeUsuario(rs.getString("NomeUsuario"));
+				aux.setEmailUsuario(rs.getString("EmailUsuario"));
+				aux.setSenhaUsuario(rs.getString("SenhaUsuario"));
+			}
+
+			// Fecha a conexão a cada operação
+			// this.c.close();
+
+			return aux;
+
+		} catch (SQLException e) {
+			System.out.println("Erro ao consultar Usuario: " + e);
+		}
+		return null;
 	}
-	
+
 	/**
-	 * R - Read - Método responsável por consultar todos os registros de Usuario no Banco de
-	 * dados
+	 * R - Read - Método responsável por consultar todos os registros de Usuario no
+	 * Banco de dados
 	 */
 	public List<Usuario> consultaTodos() {
 		try {
@@ -85,29 +126,31 @@ public class UsuarioDAO {
 
 			// Carregamento do sql para o PS
 			PreparedStatement ps = c.prepareStatement(sql);
-			
-			// Executa o comando que consulta todos os registros de usuarios do BD e armazena no rs
+
+			// Executa o comando que consulta todos os registros de usuarios do BD e
+			// armazena no rs
 			ResultSet rs = ps.executeQuery();
 
 			ArrayList<Usuario> lista = new ArrayList<Usuario>();
-			
-			//percorre cada linha que retornou da consulta do BD e cria um
-			//usuario em memoria e adiciona na lista
-			while(rs.next()) {
-				Usuario u = new Usuario();//cria um Bean em memoria
+
+			// percorre cada linha que retornou da consulta do BD e cria um
+			// usuario em memoria e adiciona na lista
+			while (rs.next()) {
+				Usuario u = new Usuario();// cria um Bean em memoria
 				u.setIdUsuario(rs.getInt("IdUsuario"));
 				u.setNomeUsuario(rs.getString("NomeUsuario"));
 				u.setEmailUsuario(rs.getString("EmailUsuario"));
 				u.setSenhaUsuario(rs.getString("SenhaUsuario"));
-				lista.add(u);//adiciona esse objeto na lista
+				lista.add(u);// adiciona esse objeto na lista
 			}
-			
+
 			// Fecha a conexão a cada operação
-			this.c.close();
+			//this.c.close();
+
 			return lista;
 
 		} catch (SQLException e) {
-			System.out.println("Erro ao inserir Usuario: " + e);
+			System.out.println("Erro ao consultar Usuarios: " + e);
 		}
 		return null;
 	}
@@ -124,5 +167,16 @@ public class UsuarioDAO {
 	 * dados
 	 */
 	public void apaga(Usuario u) {
+	}
+
+	public void fechaConexao() {
+		if (this.c != null) {
+			// Fecha a conexão a cada operação
+			try {
+				this.c.close();
+			} catch (SQLException e) {
+				System.out.println("Erro ao fechar conexao: " + e);
+			}
+		}
 	}
 }
